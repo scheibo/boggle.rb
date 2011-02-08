@@ -1,0 +1,21 @@
+#!/usr/bin/env ruby
+$LOAD_PATH.unshift(File.dirname(__FILE__) + '/../lib') unless $LOAD_PATH.include?(File.dirname(__FILE__) + '/../lib')
+
+require 'boggle'
+require 'trollop'
+
+opts = Trollop::options do
+  opt :define, "Show a definition dump at the end", :short => 'd'
+  opt :interactive, "Continue printing games", :short => 'i'
+  opt :dictionary, "Change the default dictionary", :default => 'dicts/system.dict'
+  opt :board, "Give a string as input to be the board", :default => ""
+end
+
+if ! opts[:board].empty?
+  b = Boggle::Board.new(opts[:board])
+else
+  b = Boggle::Board.new
+end
+
+g = Boggle::Game.new(b, opts)
+g.start
