@@ -17,9 +17,6 @@ Gem::Specification.new do |s|
   s.add_dependency "trollop"
   s.add_dependency "algorithms"
 
-  # s.rdoc_options = ["--line-numbers", "--inline-source", "--title", "Boggle", "--main", "Boggle"] # from rtomayko
-  # s.extra_rdoc_files = %w[README.md LICENSE]
-
   s.add_development_dependency "rake"
   s.add_development_dependency "bundler", "~> 1.0.0"
 

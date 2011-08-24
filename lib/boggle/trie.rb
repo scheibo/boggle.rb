@@ -1,4 +1,3 @@
-#!/usr/bin/env ruby
 require 'algorithms'
 
 class Boggle::Trie < Containers::Trie
@@ -9,8 +8,7 @@ class Boggle::Trie < Containers::Trie
   def match(string)
     string = string.to_s
     return nil if string.empty?
-    d = match_recursive(@root, string, 0)
-    return d
+    match_recursive(@root, string, 0)
   end
 
   def match_recursive(node, string, index)
@@ -24,7 +22,7 @@ class Boggle::Trie < Containers::Trie
       match_recursive(node.right, string, index)
     else
       return nil if node.nil?
-      if index == string.length-1
+      if index == (string.length - 1)
         if node.last?
           return node.value
         else

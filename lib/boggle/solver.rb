@@ -1,6 +1,8 @@
-require './trie'
+$:.unshift(File.dirname(__FILE__) + '/../boggle')
+require 'trie'
+require 'game'
 
-class Solver
+class Boggle::Solver
 
    def initialize(trie)
      @found_words = {} # going to use it like a set
@@ -8,23 +10,23 @@ class Solver
    end
 
    def in_trie?(prefix)
-     if (d=@trie.match(prefix.upcase)) # not nil = okay
+     if (d = @trie.match(prefix.upcase)) # not nil = okay
        if d.class == String
          @found_words[prefix] = d
        end
-       return true
+       true
      end
    end
 
    def start(board)
-     solve(board)
-     return @found_words
+     solve board
+     @found_words
    end
 
    def solve(board)
-     Game::SIZE.times do |row|
-       Game::SIZE.times do |col|
-         solve_frame( make_frame("", board, row, col)  )
+     board.size.times do |row|
+       board.size.times do |col|
+         solve_frame(make_frame("", board, row, col))
        end
      end
    end
@@ -33,9 +35,9 @@ class Solver
 
    def make_frame(prefix, board, row, col)
      frame = []
-     frame << (prefix+board[row,col])
-     new_board = deepcopy(board)
-     new_board[row,col]=nil
+     frame << (prefix + board[row,col])
+     new_board = board.deepcopy
+     new_board[row,col] = nil
      frame << new_board
      frame << row << col
      frame
@@ -43,7 +45,7 @@ class Solver
 
    def solve_frame(frame)
      next_frames(frame).each do |f|
-       prefix,b,r,c = f
+       prefix, b, r, c = f
 
        if in_trie? prefix
           # continue

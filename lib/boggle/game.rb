@@ -1,10 +1,12 @@
+$:.unshift(File.dirname(__FILE__) + '/../boggle')
+
 require 'zlib'
 require 'trie'
 
-class Game
+class Boggle::Game
 
   def self.create_dictionary(file_name)
-    trie = Trie.new
+    trie = Boggle::Trie.new
     File.open(file_name).each_line do |line|
       idx = line.index " " # get first space
       if idx.nil? # no definition
@@ -21,32 +23,27 @@ class Game
     end
 
     dump = Marshal.dump(trie)
-    dict_file = File.new("#{file_name.chomp('.txt')}.dict", "w")
+    dict_file = File.new(File.dirname(__FILE__) + "../../dicts/#{file_name.chomp('.txt')}.dict", "w")
     dict_file = Zlib::GzipWriter.new(dict_file)
     dict_file.write dump
     dict_file.close
-
-    #return trie
   end
-
 
   def initialize(board=nil, opts=nil)
     if ! board.nil?
       @board = board
     else
-      @board = Board.new
+      @board = Boggle::Board.new
     end
     @opts = opts
     @words = []
-    @trie = Trie.new
+    @trie = Boggle::Trie.new
   end
 
-
   def start
-    # Need to put these in another process
-    dict = @opts[:dictionary] #|| "dicts/mega.dict"
+    dict = @opts[:dictionary]
     fill_trie(dict) # need to only load this once
-    s = Solver.new(@trie)
+    s = Boggle::Solver.new(@trie)
     @found_pairs = s.start(@board)
 
     display
@@ -66,7 +63,7 @@ class Game
 
   private
 
-  # should be in range of minues and seconds
+  # should be in range of minutes and seconds
   def countdown(secs)
     secs.downto(0).each do |s|
       min, sec = s.divmod(60)
@@ -161,7 +158,7 @@ class Game
   end
 
   def fill_trie(file_name)
-    file = Zlib::GzipReader.open(file_name)
+    file = Zlib::GzipReader.open(File.dirname(__FILE__) + "/../../dicts/#{file_name}")
     @trie = Marshal.load file.read
     file.close
   end

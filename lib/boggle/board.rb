@@ -1,16 +1,17 @@
 class Boggle::Board
+  attr_reader :size
 
-  def initialize(size, string=nil)
-    @size = size
-    if string.nil?
-      letters = distribution.sort_by{ rand }.map { |d| d.sample }
+  def initialize(opts={})
+    @size = opts[:size]
+    if opts[:board].empty?
+      letters = Boggle::Board.distributions(@size, opts[:variant]).sort_by{ rand }.map { |d| d.sample }
     else
-      letters = letters_from_string string
+      letters = letters_from_string opts[:board]
     end
 
     @board = []
     @size.times do
-      @board << letters.pop @size
+      @board << letters.pop(@size)
     end
   end
 
@@ -21,7 +22,6 @@ class Boggle::Board
       s << "|"
       @size.times do |col|
         (l=@board[row][col]) == "Qu" ? s << " #{l}|" : s << " #{l} |"
-        end
       end
       s<<"\n"; @size.times { s<<"+"; s<<"-"*3 }; s<<"+\n"
     end
@@ -37,8 +37,8 @@ class Boggle::Board
     @board[row][col]=val
   end
 
-  def deepcopy(board)
-    Marshal.load( Marshal.dump(board) )
+  def deepcopy
+    Marshal.load( Marshal.dump(self) )
   end
 
   def self.distributions( size, variant ) # 4,0 gives standard distrubtion
