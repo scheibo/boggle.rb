@@ -14,7 +14,6 @@ Gem::Specification.new do |s|
 
   s.rubyforge_project = "boggle"
 
-  s.add_dependency "trollop"
   s.add_dependency "algorithms"
 
   s.add_development_dependency "rake"

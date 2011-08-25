@@ -1,17 +1,34 @@
 #!/usr/bin/env ruby
-$:.unshift(File.dirname(__FILE__) + '/../lib') unless $:.include?(File.dirname(__FILE__) + '/../lib')
+lib = File.expand_path('../lib', __FILE__)
+$:.unshift(lib) if File.directory?(lib) && !$:.include?(lib)
 
 require 'boggle'
-require 'trollop'
+require 'optparse'
 
-opts = Trollop::options do
-  opt :define, "Show a definition dump at the end", :short => 'd'
-  opt :interactive, "Continue printing games", :short => 'i'
-  opt :dictionary, "Change the default dictionary", :default => 'system.dict'
-  opt :board, "Give a string as input to be the board", :default => ""
-  opt :variant, "Give the board variant", :default => 0
-  opt :size, "Give the size of the board to use", :default => 4
+options = {}
+OptionParser.new do |opts|
+  opts.banner = "Usage: boggle [options]"
+
+  opts.on("-d", "--define", "Show a definition dump at the end") do |d|
+    options[:define] = d
+  end
+
+  opts.on("-t", "--dictionary", String, "Change the default dictionary") do |dict|
+    options[:dictionary] = dict || "system.dict"
+  end
+
+  opts.on("-b", "--board", String, "Give a string as input to be the board") do |b|
+    options[:board] = b || ""
+  end
+
+  opts.on("-v", "--variant", Integer, "Give the board variant") do |v|
+    options[:variant] = v || 0
+  end
+
+  opts.on("-s", "--size", Integer, "Give the size of the board to use") do |s|
+    options[:size] = s || 4
+  end
 end
 
-opts[:size] = Math.sqrt(opts[:board].size).to_i if !opts[:board].empty?
-Boggle::Game.new(Boggle::Board.new(opts), opts).start
+options[:size] = Math.sqrt(options[:board].size).to_i if !options[:board].empty?
+Boggle::Game.new(Boggle::Board.new(options), options).start
