@@ -1,34 +1,20 @@
 #!/usr/bin/env ruby
-lib = File.expand_path('../lib', __FILE__)
+lib = File.expand_path('../../lib', __FILE__)
 $:.unshift(lib) if File.directory?(lib) && !$:.include?(lib)
 
 require 'boggle'
 require 'optparse'
 
-options = {}
-OptionParser.new do |opts|
-  opts.banner = "Usage: boggle [options]"
-
-  opts.on("-d", "--define", "Show a definition dump at the end") do |d|
-    options[:define] = d
-  end
-
-  opts.on("-t", "--dictionary", String, "Change the default dictionary") do |dict|
-    options[:dictionary] = dict || "system.dict"
-  end
-
-  opts.on("-b", "--board", String, "Give a string as input to be the board") do |b|
-    options[:board] = b || ""
-  end
-
-  opts.on("-v", "--variant", Integer, "Give the board variant") do |v|
-    options[:variant] = v || 0
-  end
-
-  opts.on("-s", "--size", Integer, "Give the size of the board to use") do |s|
-    options[:size] = s || 4
-  end
+opts = {}
+ARGV.options do |argv|
+  argv.banner = "Usage: boggle [options]"
+  argv.on("-d", "--define", "Show a definition dump at the end") { |d| opts[:define] = d }
+  argv.on("--dictionary", String, "Change the default dictionary") { |dict| opts[:dictionary] = dict }
+  argv.on("-b", "--board", String, "Give a string as input to be the board") { |b|  opts[:board] = b }
+  argv.on("-v", "--variant", Integer, "Give the board variant") { |v| opts[:variant] = v  }
+  argv.on("-s", "--size", Integer, "Give the size of the board to use") { |s| opts[:size] = s }
 end
 
-options[:size] = Math.sqrt(options[:board].size).to_i if !options[:board].empty?
-Boggle::Game.new(Boggle::Board.new(options), options).start
+opts = {:dictionary => "system.dict", :board => "", :variant => 0, :size => 4}.merge opts
+opts[:size] = Math.sqrt(opts[:board].size).to_i if !opts[:board].empty?
+Boggle::Game.new(Boggle::Board.new(opts), opts).start

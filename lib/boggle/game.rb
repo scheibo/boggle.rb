@@ -23,7 +23,7 @@ class Boggle::Game
     end
 
     dump = Marshal.dump(trie)
-    dict_file = File.new(File.dirname(__FILE__) + "../../dicts/#{file_name.chomp('.txt')}.dict", "w")
+    dict_file = File.new(File.expand_path("../../../dicts/#{file_name.chomp('.txt')}.dict", __FILE__), "w")
     dict_file = Zlib::GzipWriter.new(dict_file)
     dict_file.write dump
     dict_file.close
@@ -62,17 +62,6 @@ class Boggle::Game
   end
 
   private
-
-  # should be in range of minutes and seconds
-  def countdown(secs)
-    secs.downto(0).each do |s|
-      min, sec = s.divmod(60)
-      result = sprintf "%d:%0.2d", min, sec
-      print "\r#{result}"
-      sleep 1
-    end
-    puts "\rTimes up!"
-  end
 
   def score(words)
     words.reduce(0) { |a,w| a+score_word(w) }
@@ -158,7 +147,7 @@ class Boggle::Game
   end
 
   def fill_trie(file_name)
-    file = Zlib::GzipReader.open(File.dirname(__FILE__) + "/../../dicts/#{file_name}")
+    file = Zlib::GzipReader.open(File.expand_path("../../../dicts/#{file_name}", __FILE__))
     @trie = Marshal.load file.read
     file.close
   end
