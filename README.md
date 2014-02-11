@@ -9,7 +9,7 @@ Very dirty program to let you play 4x4 boggle and learn new words. Has the follo
 		  opt :board, "Give a string as input to be the board", :default => ""
 		end
 
-Where `--interactive` has yet to be implemented, but the idea behind if would be that instead of loading up a dict each time you could continue to play with the same dictionary. Has no timer going on right now, just use a watch to time the three minutes. Use 'XYZZY' to exit any prompt (TODO: should be control-D or something as well).
+Where `--interactive` has yet to be implemented, but the idea behind it would be that instead of loading up a dict each time you could continue to play with the same dictionary. Has no timer going on right now, just use a watch to time the three minutes. Use 'XYZZY' to exit any prompt (TODO: should be control-D or something as well).
 
 As it stands, with a full scrabble dictionary load (dicts/osw.txt) it takes about 2.6 seconds to load up on
 
@@ -30,6 +30,7 @@ Not actually a gem, just
 - timer (3 min countdown)
 - interactive mode (save loading the dict)
 - Ctrl+D to exit
+- NxN board
 
 ## Copyright
 
