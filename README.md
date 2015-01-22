@@ -1,6 +1,8 @@
 # Boggle
 
-Very dirty program to let you play 4x4 boggle and learn new words. Has the following options:
+![unmaintained](http://img.shields.io/badge/status-unmaintained-lightgrey.svg)
+
+Very rough program to let you play 4x4 boggle and learn new words. Has the following options:
 
 		opts = Trollop::options do
 		  opt :define, "Show a definition dump at the end", :short => 'd'
